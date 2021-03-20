@@ -1,0 +1,15 @@
+body{
+    background-color: cornsilk;
+}
+.box{
+    width:30%;
+    background:#FFF;
+    margin:10% auto;
+    padding: 2%;
+}
+
+.effect{
+    -webkit-box-shadow: 0 10px 6px -6px #777;
+    -moz-box-shadow: 0 10px 6px -6px #777;
+    box-shadow: 0 10px 6px -6px #777;
+}
