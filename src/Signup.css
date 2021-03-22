@@ -4,7 +4,7 @@ body{
 .box{
     width:30%;
     background:#FFF;
-    margin:10% auto;
+    margin:10%;
     padding: 2%;
 }
 
@@ -12,4 +12,14 @@ body{
     -webkit-box-shadow: 0 10px 6px -6px #777;
     -moz-box-shadow: 0 10px 6px -6px #777;
     box-shadow: 0 10px 6px -6px #777;
+}
+.flex{
+    display: flex;
+}
+
+.title{
+    display: flex;
+    font-size: 6rem;
+    font-weight: bolder;
+    align-items: center;
 }
