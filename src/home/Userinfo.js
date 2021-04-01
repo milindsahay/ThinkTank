@@ -1,22 +1,22 @@
 import {Col, Container, Row} from "react-bootstrap";
 import "./Userinfo.css"
-const Userinfo  = () => {
+const Userinfo  = ({user}) => {
     return (
         <div>
             <Container className="my-container">
                 <Row>
                     <Col xs={4}>
-                        User Image
+                        <img src={user.photoURL} />
                     </Col>
                     <Col>
                         <div>
-                            Name : xyz
+                            Name : {user.displayName}
                         </div>
                         <div>
-                            email : dummy
+                            Email : {user.email}
                         </div>
                         <div>
-                            joined : 222222
+                            Last Login : {new Date().toString()}
                         </div>
                     </Col>
                 </Row>

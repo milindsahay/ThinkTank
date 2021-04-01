@@ -1,8 +1,10 @@
 import {useState} from "react";
+import {navigate} from "@reach/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Signup.css'
 import {Form, Button} from "react-bootstrap";
 import firebase from "firebase/app";
+import 'firebase/firestore'
 require('firebase/auth')
 
 const firebaseConfig = {
@@ -18,14 +20,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth()
+const db = firebase.firestore();
 const provider = new firebase.auth.GoogleAuthProvider()
 
-const Signup = () => {
+const Signup = ({user, setUser}) => {
     const [credentials, setCredentials] = useState({email:null, password:null})
     const loginWithGoogle =  async (event) => {
         try{
             event.preventDefault();
             const result = await auth.signInWithPopup(provider)
+            setUser(result.user)
+            navigate('/home')
             console.log(result)
         }
         catch (e) {
@@ -36,10 +41,13 @@ const Signup = () => {
         try {
             event.preventDefault()
             const userCredential = await auth.signInWithEmailAndPassword(credentials.email, credentials.password)
+            setUser(userCredential)
+            navigate('/home')
             console.log(userCredential)
         }
         catch (e) {
             console.log(e)
+
         }
     }
     return (

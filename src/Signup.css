@@ -23,3 +23,7 @@ body{
     font-weight: bolder;
     align-items: center;
 }
+.nav-img{
+    width: 50%;
+    border-radius: 50%;
+}
