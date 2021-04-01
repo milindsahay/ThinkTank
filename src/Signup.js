@@ -1,5 +1,3 @@
-// import signUpWithGoogle from "firebase";
-// import auth from 'firebase'
 import {useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Signup.css'
@@ -21,53 +19,28 @@ firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth()
 const provider = new firebase.auth.GoogleAuthProvider()
-// const signUpWithGoogle = () => auth.signInWithPopup(provider)
-// export default firebase;
 
 const Signup = () => {
     const [credentials, setCredentials] = useState({email:null, password:null})
-    const loginWithGoogle = (event) => {
-        auth.signInWithPopup(provider).then((result) => {
-            /** @type {firebase.auth.OAuthCredential} */
-            var credential = result.credential;
-
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = credential.accessToken;
-            // The signed-in user info.
-            var user = result.user;
+    const loginWithGoogle =  async (event) => {
+        try{
+            event.preventDefault();
+            const result = await auth.signInWithPopup(provider)
             console.log(result)
-            // ...
-        }).catch((error) => {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            console.log(errorMessage)
-            // ...
-        });
-        event.preventDefault();
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
     async function loginWithEmail(event){
-        event.preventDefault()
-        // console.log(credentials.email + " " + credentials.password)
-        // const userCredential = await auth.signInWithEmailAndPassword(credentials.email, credentials.password)
-        // const user = userCredential.user;
-        // console.log(user)
-        auth.signInWithEmailAndPassword(credentials.email, credentials.password)
-            .then((userCredential) => {
-                // Signed in
-                var user = userCredential.user;
-                console.log(user)
-                // ...
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(errorMessage)
-            });
+        try {
+            event.preventDefault()
+            const userCredential = await auth.signInWithEmailAndPassword(credentials.email, credentials.password)
+            console.log(userCredential)
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
     return (
         <div className='flex'>
