@@ -3,25 +3,8 @@ import {navigate} from "@reach/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Signup.css'
 import {Form, Button} from "react-bootstrap";
-import firebase from "firebase/app";
-import 'firebase/firestore'
-require('firebase/auth')
+import {auth, provider} from "./firebase";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBkKvdFK62fWVnTHYFy_BRYeTN1KdBhqCQ",
-    authDomain: "thinktank-ec236.firebaseapp.com",
-    projectId: "thinktank-ec236",
-    storageBucket: "thinktank-ec236.appspot.com",
-    messagingSenderId: "152104997182",
-    appId: "1:152104997182:web:689fec32fa9cf68d9a9c6f",
-    measurementId: "G-3DS0RF1K6M"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth()
-const db = firebase.firestore();
-const provider = new firebase.auth.GoogleAuthProvider()
 
 const Signup = ({user, setUser}) => {
     const [credentials, setCredentials] = useState({email:null, password:null})
@@ -34,6 +17,7 @@ const Signup = ({user, setUser}) => {
             console.log(result)
         }
         catch (e) {
+            alert(e.message)
             console.log(e)
         }
     }
@@ -46,6 +30,19 @@ const Signup = ({user, setUser}) => {
             console.log(userCredential)
         }
         catch (e) {
+            alert(e.message)
+            console.log(e)
+
+        }
+    }
+    async  function signUpWithEmail(event){
+        try{
+            event.preventDefault();
+            const userCredential = await auth.createUserWithEmailAndPassword(credentials.email, credentials.password)
+            console.log(userCredential)
+        }
+        catch (e) {
+            alert(e.message)
             console.log(e)
 
         }
@@ -72,7 +69,7 @@ const Signup = ({user, setUser}) => {
                 <hr/>
                 <Form>
                     <Form.Group controlId="Button">
-                        <Button variant="outline-dark" type="submit" block>
+                        <Button variant="outline-dark" type="submit" onClick={signUpWithEmail} block>
                             Sign Up
                         </Button>
                     </Form.Group>

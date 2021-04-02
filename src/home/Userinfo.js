@@ -3,7 +3,7 @@ import "./Userinfo.css"
 const Userinfo  = ({user}) => {
     return (
         <div>
-            <Container className="my-container">
+            <Container className="my-container p-3">
                 <Row>
                     <Col xs={4}>
                         <img src={user.photoURL} />
