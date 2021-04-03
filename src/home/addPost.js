@@ -2,18 +2,21 @@ import {Button, Container, Form} from "react-bootstrap";
 import {useState} from "react";
 import {db} from "../firebase";
 
-const AddPost = ({user}) => {
+const AddPost = ({user, posts, setPosts}) => {
     const [postBody, setPostBody] = useState({});
     async function addPost(event){
         try{
             event.preventDefault();
-            const docRef = await db.collection('posts').add({
+            let post = {
                 title: postBody.title,
                 body: postBody.body,
                 userID: user.user.uid,
                 createdAt: new Date().toString()
-            })
-            console.log(`Document written with id: ${docRef}`)
+            }
+
+            const docRef = await db.collection('posts').add(post)
+            setPosts([{id:docRef.id, ...post}, ...posts])
+            console.log(`Document written with id: ${docRef.id}`)
         }
         catch (e) {
             alert(e.message)

@@ -4,11 +4,12 @@ import Home from "./home/Home";
 import {useState} from "react";
 
 function App() {
-    let [user, setUser] = useState(null)
+    const [user, setUser] = useState(null)
+    const [posts, setPosts] = useState([])
     return (
         <Router>
             <Signup path="/" user={user} setUser={setUser}/>
-            {user && <Home path="/home" user={user} setUser={setUser}/>}
+            <Home path="/home" user={user} setUser={setUser} posts={posts} setPosts={setPosts}/>
         </Router>
     );
 }
