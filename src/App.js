@@ -4,7 +4,7 @@ import Home from "./home/Home";
 import {useState} from "react";
 
 function App() {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState({displayName:"Default", photoURL:"default", email:"default"})
     const [posts, setPosts] = useState([])
     return (
         <Router>

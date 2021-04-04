@@ -5,20 +5,19 @@ import {db} from "../firebase";
 const Post = ({posts, setPosts}) => {
     useEffect(() => {
         async function documents() {
-        const querySnapshot = await db.collection('posts').get()
-        let myposts = [];
-        querySnapshot.docs.map(doc => myposts.push({id:doc.id, ...doc.data()}))
-            console.log(querySnapshot)
-        setPosts(myposts)
+            await db.collection('posts').onSnapshot(snapshot => {
+            let myposts = [];
+            snapshot.docs.map(doc => myposts.push({id:doc.id, ...doc.data()}))
+            setPosts(myposts)
+        })
     }
     documents()
+    // cleanup fn required
     }, [])
+
     const deletePost = async (id) => {
         try{
-            // event.preventDefault();
             await db.doc(`posts/${id}`).delete();
-            const newPosts = posts.filter(post => post.id != id)
-            setPosts([...newPosts]);
         }
         catch (e) {
             alert(e.message);

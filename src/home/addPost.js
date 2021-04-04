@@ -10,12 +10,11 @@ const AddPost = ({user, posts, setPosts}) => {
             let post = {
                 title: postBody.title,
                 body: postBody.body,
-                userID: user.user.uid,
+                // userID: user.user.uid,
                 createdAt: new Date().toString()
             }
 
             const docRef = await db.collection('posts').add(post)
-            setPosts([{id:docRef.id, ...post}, ...posts])
             console.log(`Document written with id: ${docRef.id}`)
         }
         catch (e) {
