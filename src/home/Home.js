@@ -3,11 +3,14 @@ import Userinfo from "./Userinfo";
 import Post from "./Post";
 import AddPost from "./addPost";
 import {useEffect} from "react";
-import {auth} from "../firebase";
+import {addNewUser, auth, getUser} from "../firebase";
 function Home({user, setUser, posts, setPosts}){
 useEffect(() => {
- auth.onAuthStateChanged((u)=>{
-     if(u) setUser(u);
+ auth.onAuthStateChanged(async (authUser)=>{
+     if(authUser) {
+         const dbUser = await addNewUser(authUser)
+         setUser(dbUser);
+     }
  })
 },[])
     return(

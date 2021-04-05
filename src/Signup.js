@@ -3,7 +3,7 @@ import {navigate} from "@reach/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Signup.css'
 import {Form, Button} from "react-bootstrap";
-import {auth, provider} from "./firebase";
+import {addNewUser, auth, getUser, provider, db} from "./firebase";
 
 
 const Signup = ({user, setUser}) => {
@@ -12,7 +12,8 @@ const Signup = ({user, setUser}) => {
         try{
             event.preventDefault();
             const result = await auth.signInWithPopup(provider)
-            setUser(result.user)
+            await addNewUser(result.user, {displayName:result.user.displayName, photoURL: result.user.photoURL})
+            // setUser(dbUser)
             navigate('/home')
             console.log(result)
         }
@@ -25,9 +26,9 @@ const Signup = ({user, setUser}) => {
         try {
             event.preventDefault()
             const userCredential = await auth.signInWithEmailAndPassword(credentials.email, credentials.password)
-            setUser(userCredential)
+            await addNewUser(userCredential.user, {displayName:"Milind"})
+            // setUser(userDoc)
             navigate('/home')
-            console.log(userCredential)
         }
         catch (e) {
             alert(e.message)
@@ -39,6 +40,7 @@ const Signup = ({user, setUser}) => {
         try{
             event.preventDefault();
             const userCredential = await auth.createUserWithEmailAndPassword(credentials.email, credentials.password)
+            await addNewUser(userCredential.user, {displayName: "Milind"})
             console.log(userCredential)
         }
         catch (e) {

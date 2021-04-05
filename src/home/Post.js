@@ -29,7 +29,7 @@ const Post = ({posts, setPosts}) => {
         <Container className='my-container'>
             {posts.map( function (post){
                 return(
-                <Container className="my-container">
+                <Container className="my-container" key={post.id}>
                     <Row><Col><strong>{post.title}</strong></Col></Row>
                     <Row><Col>
                         <div>{post.body}</div>

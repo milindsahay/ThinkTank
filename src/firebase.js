@@ -17,3 +17,21 @@ firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 export const auth = firebase.auth()
 export const provider = new firebase.auth.GoogleAuthProvider()
+
+export const addNewUser = async (user, additionalDetails) => {
+    if(!user) return null
+    const snapshot = await db.doc(`users/${user.uid}`).get()
+    if(!snapshot.exists){
+        await db.collection('users').doc(`${user.uid}`).set({
+            email: user.email,
+            ...additionalDetails
+        })
+    }
+    return getUser(user.uid)
+}
+
+export const getUser = async (uid) => {
+    if(!uid) return null;
+    const docRef = await db.collection('users').doc(`${uid}`).get()
+    return {uid: docRef.id, ...docRef.data()}
+}
