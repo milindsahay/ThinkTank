@@ -1,13 +1,15 @@
 import {Navbar, Nav, Button} from "react-bootstrap";
 import {auth} from "./firebase";
 import {navigate} from "@reach/router";
+import {store} from "./redux_store";
+import {useSelector} from "react-redux";
 
-const Navigationbar = ({user}) => {
+const Navigationbar = () => {
+    const user = useSelector(state => state.user)
     async function signOut(e){
         try{
             e.preventDefault();
-            const user = await auth.signOut();
-            console.log(user)
+            await auth.signOut();
             navigate('/')
         }
         catch (e) {

@@ -1,14 +1,19 @@
 import {Button, Col, Container, Row} from "react-bootstrap";
 import {useEffect} from "react";
 import {db} from "../firebase";
+import {store} from "../redux_store";
+import {useSelector} from "react-redux";
 
-const Post = ({posts, setPosts}) => {
+
+const Post = () => {
+    const posts = useSelector(state => state.posts)
     useEffect(() => {
         async function documents() {
             await db.collection('posts').onSnapshot(snapshot => {
             let myposts = [];
             snapshot.docs.map(doc => myposts.push({id:doc.id, ...doc.data()}))
-            setPosts(myposts)
+                store.dispatch({type:'posts/set', posts: myposts})
+
         })
     }
     documents()

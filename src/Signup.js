@@ -3,17 +3,16 @@ import {navigate} from "@reach/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Signup.css'
 import {Form, Button} from "react-bootstrap";
-import {addNewUser, auth, getUser, provider, db} from "./firebase";
+import {addNewUser, auth, provider} from "./firebase";
 
 
-const Signup = ({user, setUser}) => {
+const Signup = () => {
     const [credentials, setCredentials] = useState({email:null, password:null})
     const loginWithGoogle =  async (event) => {
         try{
             event.preventDefault();
             const result = await auth.signInWithPopup(provider)
             await addNewUser(result.user, {displayName:result.user.displayName, photoURL: result.user.photoURL})
-            // setUser(dbUser)
             navigate('/home')
             console.log(result)
         }
@@ -27,7 +26,6 @@ const Signup = ({user, setUser}) => {
             event.preventDefault()
             const userCredential = await auth.signInWithEmailAndPassword(credentials.email, credentials.password)
             await addNewUser(userCredential.user, {displayName:"Milind"})
-            // setUser(userDoc)
             navigate('/home')
         }
         catch (e) {
