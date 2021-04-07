@@ -1,6 +1,8 @@
 import {Col, Container, Row} from "react-bootstrap";
 import "./Userinfo.css"
-const Userinfo  = ({user}) => {
+import {useSelector} from "react-redux";
+const Userinfo  = () => {
+    const user = useSelector(state => state.user)
     return (
         <div>
             <Container className="my-container p-3">

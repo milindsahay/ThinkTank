@@ -4,21 +4,24 @@ import Post from "./Post";
 import AddPost from "./addPost";
 import {useEffect} from "react";
 import {addNewUser, auth, getUser} from "../firebase";
-function Home({user, setUser, posts, setPosts}){
+import {store} from "../redux_store";
+
+function Home(){
+
 useEffect(() => {
  auth.onAuthStateChanged(async (authUser)=>{
      if(authUser) {
          const dbUser = await addNewUser(authUser)
-         setUser(dbUser);
+         store.dispatch({type:'user/set', user:dbUser})
      }
  })
 },[])
     return(
         <div>
-            <Navigationbar user={user} setUser={setUser}/>
-            <Userinfo user={user}/>
-            <AddPost user={user} posts={posts} setPosts={setPosts}/>
-            <Post posts={posts} setPosts={setPosts}/>
+            <Navigationbar />
+            <Userinfo />
+            <AddPost />
+            <Post />
         </div>
     )
 }

@@ -2,7 +2,7 @@ import {Button, Container, Form} from "react-bootstrap";
 import {useState} from "react";
 import {db} from "../firebase";
 
-const AddPost = ({user, posts, setPosts}) => {
+const AddPost = () => {
     const [postBody, setPostBody] = useState({});
     async function addPost(event){
         try{
