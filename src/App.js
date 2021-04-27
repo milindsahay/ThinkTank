@@ -11,8 +11,12 @@ function App() {
     useEffect(() => {
         auth.onAuthStateChanged(async (authUser)=>{
             if(authUser) {
-                const dbUser = await addNewUser(authUser)
-                store.dispatch({type:'user/set', user:dbUser})
+                const dbRef = await addNewUser(authUser)
+                dbRef.onSnapshot(snapshot => {
+                    console.log(`get user snapshot ${snapshot.id} and ${snapshot.data()}`)
+                    var payload =  { uid: snapshot.id, ...snapshot.data()}
+                    store.dispatch({type:'user/set', user:payload})
+                })
             }
         })
     },[])

@@ -30,8 +30,7 @@ export const addNewUser = async (user, additionalDetails) => {
     return getUser(user.uid)
 }
 
-export const getUser = async (uid) => {
+export const getUser = (uid) => {
     if(!uid) return null;
-    const docRef = await db.collection('users').doc(`${uid}`).get()
-    return {uid: docRef.id, ...docRef.data()}
+    return db.collection('users').doc(`${uid}`)
 }

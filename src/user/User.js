@@ -2,11 +2,23 @@ import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import Navigationbar from "../Navigationbar";
 import {useState} from "react";
+import {db} from "../firebase";
 
 const User = () => {
     const user = useSelector(state => state.user)
     let imageInput = null;
     const [profileAttributes, setProfileAttributes] = useState({});
+    const submitChanges = async (event) => {
+        try{
+            event.preventDefault();
+            await db.doc(`users/${user.uid}`).update({displayName: profileAttributes.displayName})
+            console.log("User profile updated successfully")
+
+        }
+        catch (e) {
+            console.error("error while updating user profile", e)
+        }
+    }
     return (
         <>
             <Navigationbar/>
@@ -32,7 +44,7 @@ const User = () => {
             </div>
 
             <Container className="my-container p-3">
-                <Form>
+                <Form onSubmit={submitChanges}>
                     <Form.Group controlId="DisplayName">
                         <Form.Control type="text" placeholder="Display Name"
                                       onChange={(event) => setProfileAttributes({
