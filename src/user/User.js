@@ -1,9 +1,12 @@
-import {Col, Container, Row} from "react-bootstrap";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import Navigationbar from "../Navigationbar";
+import {useState} from "react";
 
 const User = () => {
     const user = useSelector(state => state.user)
+    let imageInput = null;
+    const [profileAttributes, setProfileAttributes] = useState({});
     return (
         <>
             <Navigationbar/>
@@ -27,6 +30,26 @@ const User = () => {
                     </Row>
                 </Container>
             </div>
+
+            <Container className="my-container p-3">
+                <Form>
+                    <Form.Group controlId="DisplayName">
+                        <Form.Control type="text" placeholder="Display Name"
+                                      onChange={(event) => setProfileAttributes({
+                                          ...profileAttributes,
+                                          displayName: event.target.value
+                                      })}/>
+                    </Form.Group>
+                    <Form.Group controlId="Image">
+                        <Form.Control type="file" ref={ref => imageInput = ref} />
+                    </Form.Group>
+                    <Form.Group controlId="Button">
+                        <Button variant="primary" type="submit" block>
+                            Submit
+                        </Button>
+                    </Form.Group>
+                </Form>
+            </Container>
         </>
 
     )
