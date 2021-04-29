@@ -2,20 +2,32 @@ import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import Navigationbar from "../Navigationbar";
 import {useState} from "react";
-import {db} from "../firebase";
+import {db, storage} from "../firebase";
 
 const User = () => {
     const user = useSelector(state => state.user)
     let imageInput = null;
     const [profileAttributes, setProfileAttributes] = useState({});
     const submitChanges = async (event) => {
-        try{
+        let {displayName} = profileAttributes;
+        try {
             event.preventDefault();
-            await db.doc(`users/${user.uid}`).update({displayName: profileAttributes.displayName})
-            console.log("User profile updated successfully")
+            if (displayName) {
+                await db.doc(`users/${user.uid}`).update({displayName})
+                console.log("User profile updated successfully")
+            }
+            if (imageInput) {
+                storage.ref().child(`user-profile`).child(user.uid).child(imageInput.files[0].name).put(imageInput.files[0]).then(
+                    response => {
+                        return response.ref.getDownloadURL()
+                    }
+                ).then(photoURL => {
+                    db.doc(`users/${user.uid}`).update({photoURL})
+                })
+            }
 
-        }
-        catch (e) {
+
+        } catch (e) {
             console.error("error while updating user profile", e)
         }
     }
@@ -53,7 +65,7 @@ const User = () => {
                                       })}/>
                     </Form.Group>
                     <Form.Group controlId="Image">
-                        <Form.Control type="file" ref={ref => imageInput = ref} />
+                        <Form.Control type="file" ref={ref => imageInput = ref}/>
                     </Form.Group>
                     <Form.Group controlId="Button">
                         <Button variant="primary" type="submit" block>
