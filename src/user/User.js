@@ -17,6 +17,8 @@ const User = () => {
                 console.log("User profile updated successfully")
             }
             if (imageInput) {
+                //Storing in cloud storage and getting download url to update firestore in realtime
+                //Page doesn't refresh on file upload (because of subscribing to user datastore)
                 storage.ref().child(`user-profile`).child(user.uid).child(imageInput.files[0].name).put(imageInput.files[0]).then(
                     response => {
                         return response.ref.getDownloadURL()
@@ -38,7 +40,7 @@ const User = () => {
                 <Container className="my-container p-3">
                     <Row>
                         <Col xs={4}>
-                            <img src={user.photoURL}/>
+                            <img src={user.photoURL} className='usr-img'/>
                         </Col>
                         <Col>
                             <div>

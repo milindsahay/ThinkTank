@@ -24,6 +24,11 @@ body{
     align-items: center;
 }
 .nav-img{
-    width: 50%;
+    height: 40px;
+    margin-right: 1.5rem;
     border-radius: 50%;
+}
+
+.usr-img{
+    width: 70%;
 }
