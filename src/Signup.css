@@ -32,3 +32,15 @@ body{
 .usr-img{
     width: 70%;
 }
+
+.post-container{
+    margin-top: 2rem;
+    border-radius: 25px;
+    padding-top: 8px;
+    border: #777777 solid 1px;
+}
+
+.post-img{
+    height: 60px;
+    border-radius: 50%;
+}

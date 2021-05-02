@@ -34,13 +34,20 @@ const Post = () => {
         <Container className='my-container'>
             {posts.map( function (post){
                 return(
-                <Container className="my-container" key={post.id}>
+                <Container className="post-container" key={post.id}>
+                    <Row>
+                        <Col md="auto"><img src={post.user && post.user.photoURL} className="post-img" alt="picture"/></Col>
+                        <Col>
+                            <Row><Col style={{'font-size':'25px', padding:'0', margin:'0', 'font-weight':'bold', 'line-height': '30px', 'margin-top': '1%', 'margin-bottom':'3px'}}>{post.user && post.user.displayName}</Col></Row>
+                            <Row><Col style={{ 'line-height': '80%', padding:'0', 'font-size': '12px' }}>{post && post.createdAt}</Col></Row>
+                        </Col>
+                    </Row>
                     <Row><Col><strong>{post.title}</strong></Col></Row>
                     <Row><Col>
                         <div>{post.body}</div>
                     </Col></Row>
                     <Row className="bottom-bar">
-                        <Col className="pt-2">Posted by {post.uid}</Col>
+                        <Col className="pt-2">Posted by {post.user && post.user.displayName}</Col>
                         <Col className="p-2">Time: {post.createdAt}</Col>
                         <Col className="p-2"><Button variant="danger" onClick={()=>deletePost(post.id)}>Delete</Button></Col>
                     </Row>

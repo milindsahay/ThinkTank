@@ -4,5 +4,6 @@
 }
 
 .bottom-bar{
-    background-color: darkcyan;
+    background-color: grey;
+    border-radius: 0 0 25px 25px;
 }

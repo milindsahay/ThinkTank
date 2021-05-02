@@ -1,16 +1,22 @@
 import {Button, Container, Form} from "react-bootstrap";
 import {useState} from "react";
 import {db} from "../firebase";
+import{store} from "../redux_store";
 
 const AddPost = () => {
     const [postBody, setPostBody] = useState({});
     async function addPost(event){
         try{
             event.preventDefault();
+            const user = store.getState().user
             let post = {
                 title: postBody.title,
                 body: postBody.body,
-                // userID: user.user.uid,
+                user: {
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL
+                },
                 createdAt: new Date().toString()
             }
 
