@@ -5,9 +5,12 @@ import {store} from "../redux_store";
 import {useSelector} from "react-redux";
 import CancelIcon from '@material-ui/icons/Cancel';
 import AlarmIcon from '@material-ui/icons/Alarm';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ChatIcon from '@material-ui/icons/Chat';
 
 const Post = () => {
     const posts = useSelector(state => state.posts)
+    const loggedUser = useSelector(state => state.user)
     useEffect(() => {
         async function documents() {
             await db.collection('posts').onSnapshot(snapshot => {
@@ -58,11 +61,18 @@ const Post = () => {
                             <Row><Col style={{'font-size':'25px', padding:'0', margin:'0', 'font-weight':'bold', 'line-height': '30px', 'margin-top': '1%', 'margin-bottom':'3px'}}>{post.user && post.user.displayName}</Col></Row>
                             <Row><Col style={{ 'line-height': '80%', padding:'0', 'font-size': '12px', 'display': 'flex', 'align-items':'center'}}><AlarmIcon style={{'font-size':"12px", 'margin-right':'2px'}}/>{post && getDateStringFromDate(post.createdAt)}</Col></Row>
                         </Col>
-                        <Col><CancelIcon className="float-right" style={{color:'red', cursor: 'pointer'}} onClick={()=>deletePost(post.id)} /></Col>
+                        {/*Delete post button access only to creator of the post*/}
+                        <Col>{loggedUser.uid==post.user.uid && <CancelIcon className="float-right" style={{color:'red', cursor: 'pointer'}} onClick={()=>deletePost(post.id)} />}</Col>
                     </Row>
                     <Row><Col>
                         <div>{post.body}</div>
                     </Col></Row>
+                    <hr/>
+                    <Row>
+                        <Col ><Button variant="outline-secondary" size={"sm"} style={{'width':'100%'}}><ThumbUpIcon />   Like</Button></Col>
+                        <Col ><Button variant="outline-secondary" size={"sm"} style={{'width':'100%'}}><ChatIcon />   Comment</Button></Col>
+                    </Row>
+                    <hr/>
                 </Container>
                 )
             })}
