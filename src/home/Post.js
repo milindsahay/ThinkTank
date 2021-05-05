@@ -35,19 +35,29 @@ const Post = () => {
     }
 
     const handleLike = async (post) => {
-        console.log("inside handle like")
         if(!post.id) return;
         const {like} = post
+        //If user has already liked the post, don't let him/her like it again
         console.log(like)
-        console.log(like && like.users && like.users.includes(loggedUser.uid))
-        if (like && like.users && !like.users.includes(loggedUser.uid)){
+        console.log(like?.users && !like.users.includes(loggedUser.uid))
+        if (like?.users && !like.users.includes(loggedUser.uid)){
             like.count++;
             like.users = [loggedUser.uid, ...like.users]
-            console.log(like)
-            await db.doc(`posts/${post.uid}`).update({like})
+            await db.doc(`posts/${post.id}`).update({like})
+        }
+
+        else if(like?.users && like.users.includes(loggedUser.uid)){
+            like.count--;
+            like.users = like.users.filter(function (uid){
+               return uid!=loggedUser.uid
+            })
+            await db.doc(`posts/${post.id}`).update({like})
         }
     }
-
+    const getLikeButtonColor = (post) =>{
+        const {like} = post
+        return like?.users && !like.users.includes(loggedUser.uid) ? '#6c757d' : '#007bff'
+    }
     const getDateStringFromDate = (dateObj) => {
         let dateArray = dateObj.toDate().toString().split(" ").slice(1, 5)
         let timeStamp = dateArray.pop().split(":")
@@ -107,7 +117,7 @@ const Post = () => {
                         <hr className="hr"/>
                         <Row>
                             <Col><Button variant="outline-secondary" size={"sm"}
-                                         style={{'width': '100%'}} onClick={() => handleLike(post)}><ThumbUpIcon/> Like   {post.like && post.like.count}</Button></Col>
+                                         style={{'width': '100%', 'color': getLikeButtonColor(post)}} onClick={() => handleLike(post)}><ThumbUpIcon/> Like   {post.like && post.like.count}</Button></Col>
                             <Col><Button variant="outline-secondary" size={"sm"}
                                          style={{'width': '100%'}}><ChatIcon/> Comment</Button></Col>
                         </Row>
