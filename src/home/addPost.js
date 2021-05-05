@@ -16,6 +16,10 @@ const AddPost = () => {
                     displayName: user.displayName,
                     photoURL: user.photoURL
                 },
+                like:{
+                  count: 0,
+                  users:[]
+                },
                 createdAt: new Date()
             }
 

@@ -34,6 +34,20 @@ const Post = () => {
         }
     }
 
+    const handleLike = async (post) => {
+        console.log("inside handle like")
+        if(!post.id) return;
+        const {like} = post
+        console.log(like)
+        console.log(like && like.users && like.users.includes(loggedUser.uid))
+        if (like && like.users && !like.users.includes(loggedUser.uid)){
+            like.count++;
+            like.users = [loggedUser.uid, ...like.users]
+            console.log(like)
+            await db.doc(`posts/${post.uid}`).update({like})
+        }
+    }
+
     const getDateStringFromDate = (dateObj) => {
         let dateArray = dateObj.toDate().toString().split(" ").slice(1, 5)
         let timeStamp = dateArray.pop().split(":")
@@ -93,7 +107,7 @@ const Post = () => {
                         <hr className="hr"/>
                         <Row>
                             <Col><Button variant="outline-secondary" size={"sm"}
-                                         style={{'width': '100%'}}><ThumbUpIcon/> Like</Button></Col>
+                                         style={{'width': '100%'}} onClick={() => handleLike(post)}><ThumbUpIcon/> Like   {post.like && post.like.count}</Button></Col>
                             <Col><Button variant="outline-secondary" size={"sm"}
                                          style={{'width': '100%'}}><ChatIcon/> Comment</Button></Col>
                         </Row>
