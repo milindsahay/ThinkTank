@@ -25,7 +25,6 @@ const AddPost = () => {
 
             const docRef = await db.collection('posts').add(post)
             console.log(`Document written with id: ${docRef.id}`)
-            setPostBody({...postBody, body:""})
         }
         catch (e) {
             alert(e.message)

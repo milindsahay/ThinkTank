@@ -1,5 +1,5 @@
 import Navigationbar from "../Navigationbar";
-import Post from "./Post";
+import Posts from "./Posts";
 import AddPost from "./addPost";
 import "./Home.css"
 
@@ -10,7 +10,7 @@ function Home(){
         <div>
             <Navigationbar />
             <AddPost />
-            <Post />
+            <Posts />
         </div>
     )
 }

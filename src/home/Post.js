@@ -1,30 +1,14 @@
 import {Button, Col, Container, Row} from "react-bootstrap";
-import {useEffect} from "react";
+import AlarmIcon from "@material-ui/icons/Alarm";
+import CancelIcon from "@material-ui/icons/Cancel";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import ChatIcon from "@material-ui/icons/Chat";
 import {db} from "../firebase";
-import {store} from "../redux_store";
 import {useSelector} from "react-redux";
-import CancelIcon from '@material-ui/icons/Cancel';
-import AlarmIcon from '@material-ui/icons/Alarm';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ChatIcon from '@material-ui/icons/Chat';
 
-const Post = () => {
-    const posts = useSelector(state => state.posts)
+const Post = (props) => {
+
     const loggedUser = useSelector(state => state.user)
-    useEffect(() => {
-        async function documents() {
-            await db.collection('posts').onSnapshot(snapshot => {
-                let myposts = [];
-                snapshot.docs.map(doc => myposts.push({id: doc.id, ...doc.data()}))
-                store.dispatch({type: 'posts/set', posts: myposts})
-
-            })
-        }
-
-        documents()
-        // cleanup fn required
-    }, [])
-
     const deletePost = async (id) => {
         try {
             await db.doc(`posts/${id}`).delete();
@@ -38,8 +22,6 @@ const Post = () => {
         if(!post.id) return;
         const {like} = post
         //If user has already liked the post, don't let him/her like it again
-        console.log(like)
-        console.log(like?.users && !like.users.includes(loggedUser.uid))
         if (like?.users && !like.users.includes(loggedUser.uid)){
             like.count++;
             like.users = [loggedUser.uid, ...like.users]
@@ -49,7 +31,7 @@ const Post = () => {
         else if(like?.users && like.users.includes(loggedUser.uid)){
             like.count--;
             like.users = like.users.filter(function (uid){
-               return uid!=loggedUser.uid
+                return uid!==loggedUser.uid
             })
             await db.doc(`posts/${post.id}`).update({like})
         }
@@ -73,60 +55,55 @@ const Post = () => {
         let [month, date, year] = dateArray
         return [date, month, year].join(" ") + " at " + timeStamp.join(":") + meridian
     }
-    return (
 
-        <Container className='my-container'>
-            {posts.map(function (post) {
-                return (
-                    <Container className="post-container" key={post.id}>
-                        <Row>
-                            <Col md="auto"><img src={post.user && post.user.photoURL} className="post-img"
-                                                alt="picture"/></Col>
-                            <Col>
-                                <Row><Col style={{
-                                    'font-size': '25px',
-                                    padding: '0',
-                                    margin: '0',
-                                    'font-weight': 'bold',
-                                    'line-height': '30px',
-                                    'margin-top': '1%',
-                                    'margin-bottom': '3px'
-                                }}>{post.user && post.user.displayName}</Col></Row>
-                                <Row><Col style={{
-                                    'line-height': '80%',
-                                    padding: '0',
-                                    'font-size': '12px',
-                                    'display': 'flex',
-                                    'align-items': 'center'
-                                }}><AlarmIcon style={{
-                                    'font-size': "12px",
-                                    'margin-right': '2px'
-                                }}/>{post && getDateStringFromDate(post.createdAt)}</Col></Row>
-                            </Col>
-                            {/*Delete post button access only to creator of the post*/}
-                            <Col>{loggedUser.uid == post.user.uid &&
-                            <CancelIcon className="float-right" style={{color: 'red', cursor: 'pointer'}}
-                                        onClick={() => deletePost(post.id)}/>}</Col>
-                        </Row>
-                        <Row><Col style={{
-                            'padding-top': '0.5rem',
-                            'padding-bottom': '1rem'
-                        }}>
-                            <div>{post.body}</div>
-                        </Col></Row>
-                        <hr className="hr"/>
-                        <Row>
-                            <Col><Button variant="outline-secondary" size={"sm"}
-                                         style={{'width': '100%', 'color': getLikeButtonColor(post)}} onClick={() => handleLike(post)}><ThumbUpIcon/> Like   {post.like && post.like.count}</Button></Col>
-                            <Col><Button variant="outline-secondary" size={"sm"}
-                                         style={{'width': '100%'}}><ChatIcon/> Comment</Button></Col>
-                        </Row>
-                        <hr className="hr"/>
-                    </Container>
-                )
-            })}
+    return(
+        <Container className="post-container" key={props.post.id}>
+            <Row>
+                <Col md="auto"><img src={props.post.user && props.post.user.photoURL} className="post-img"
+                                    alt="picture"/></Col>
+                <Col>
+                    <Row><Col style={{
+                        'font-size': '25px',
+                        padding: '0',
+                        margin: '0',
+                        'font-weight': 'bold',
+                        'line-height': '30px',
+                        'margin-top': '1%',
+                        'margin-bottom': '3px'
+                    }}>{props.post.user && props.post.user.displayName}</Col></Row>
+                    <Row><Col style={{
+                        'line-height': '80%',
+                        padding: '0',
+                        'font-size': '12px',
+                        'display': 'flex',
+                        'align-items': 'center'
+                    }}><AlarmIcon style={{
+                        'font-size': "12px",
+                        'margin-right': '2px'
+                    }}/>{props.post && getDateStringFromDate(props.post.createdAt)}</Col></Row>
+                </Col>
+                {/*Delete post button access only to creator of the post*/}
+                <Col>{loggedUser.uid === props.post.user.uid &&
+                <CancelIcon className="float-right" style={{color: 'red', cursor: 'pointer'}}
+                            onClick={() => deletePost(props.post.id)}/>}</Col>
+            </Row>
+            <Row><Col style={{
+                'padding-top': '0.5rem',
+                'padding-bottom': '1rem'
+            }}>
+                <div>{props.post.body}</div>
+            </Col></Row>
+            <hr className="hr"/>
+            <Row>
+                <Col><Button variant="outline-secondary" size={"sm"}
+                             style={{'width': '100%', 'color': getLikeButtonColor(props.post)}} onClick={() => handleLike(props.post)}><ThumbUpIcon/> Like   {props.post.like && props.post.like.count}</Button></Col>
+                <Col><Button variant="outline-secondary" size={"sm"}
+                             style={{'width': '100%'}}><ChatIcon/> Comment</Button></Col>
+            </Row>
+            <hr className="hr"/>
         </Container>
     )
 }
+
 
 export default Post;
