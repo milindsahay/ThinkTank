@@ -5,6 +5,7 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ChatIcon from "@material-ui/icons/Chat";
 import {db} from "../firebase";
 import {useSelector} from "react-redux";
+import {Link} from "@reach/router";
 
 const Post = (props) => {
 
@@ -19,24 +20,23 @@ const Post = (props) => {
     }
 
     const handleLike = async (post) => {
-        if(!post.id) return;
+        if (!post.id) return;
         const {like} = post
+        console.log("inside handle like")
         //If user has already liked the post, don't let him/her like it again
-        if (like?.users && !like.users.includes(loggedUser.uid)){
+        if (like?.users && !like.users.includes(loggedUser.uid)) {
             like.count++;
             like.users = [loggedUser.uid, ...like.users]
             await db.doc(`posts/${post.id}`).update({like})
-        }
-
-        else if(like?.users && like.users.includes(loggedUser.uid)){
+        } else if (like?.users && like.users.includes(loggedUser.uid)) {
             like.count--;
-            like.users = like.users.filter(function (uid){
-                return uid!==loggedUser.uid
+            like.users = like.users.filter(function (uid) {
+                return uid !== loggedUser.uid
             })
             await db.doc(`posts/${post.id}`).update({like})
         }
     }
-    const getLikeButtonColor = (post) =>{
+    const getLikeButtonColor = (post) => {
         const {like} = post
         return like?.users && !like.users.includes(loggedUser.uid) ? '#6c757d' : '#007bff'
     }
@@ -56,13 +56,13 @@ const Post = (props) => {
         return [date, month, year].join(" ") + " at " + timeStamp.join(":") + meridian
     }
 
-    return(
+    return (
         <Container className="post-container" key={props.post.id}>
             <Row>
                 <Col md="auto"><img src={props.post.user && props.post.user.photoURL} className="post-img"
                                     alt="picture"/></Col>
                 <Col>
-                    <Row><Col style={{
+                    <Row> <Link to={`/post/${props.post.id}`}><Col style={{
                         'font-size': '25px',
                         padding: '0',
                         margin: '0',
@@ -70,7 +70,7 @@ const Post = (props) => {
                         'line-height': '30px',
                         'margin-top': '1%',
                         'margin-bottom': '3px'
-                    }}>{props.post.user && props.post.user.displayName}</Col></Row>
+                    }}>{props.post.user && props.post.user.displayName}</Col></Link></Row>
                     <Row><Col style={{
                         'line-height': '80%',
                         padding: '0',
@@ -96,7 +96,9 @@ const Post = (props) => {
             <hr className="hr"/>
             <Row>
                 <Col><Button variant="outline-secondary" size={"sm"}
-                             style={{'width': '100%', 'color': getLikeButtonColor(props.post)}} onClick={() => handleLike(props.post)}><ThumbUpIcon/> Like   {props.post.like && props.post.like.count}</Button></Col>
+                             style={{'width': '100%', 'color': getLikeButtonColor(props.post)}}
+                             onClick={() => handleLike(props.post)}><ThumbUpIcon/> Like {props.post.like && props.post.like.count}
+                </Button></Col>
                 <Col><Button variant="outline-secondary" size={"sm"}
                              style={{'width': '100%'}}><ChatIcon/> Comment</Button></Col>
             </Row>

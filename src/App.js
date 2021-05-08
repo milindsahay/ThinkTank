@@ -6,14 +6,13 @@ import {store} from "./redux_store";
 import User from "./user/User";
 import {useEffect} from "react";
 import {addNewUser, auth} from "./firebase";
-
+import PostPage from "./PostPage/PostPage";
 function App() {
     useEffect(() => {
         auth.onAuthStateChanged(async (authUser)=>{
             if(authUser) {
                 const dbRef = await addNewUser(authUser)
                 dbRef.onSnapshot(snapshot => {
-                    console.log(`get user snapshot ${snapshot.id} and ${snapshot.data()}`)
                     var payload =  { uid: snapshot.id, ...snapshot.data()}
                     store.dispatch({type:'user/set', user:payload})
                 })
@@ -26,6 +25,7 @@ function App() {
                 <Signup path="/" />
                 <Home path="/home" />
                 <User path="/user" />
+                <PostPage path="/post/:postid"/>
             </Router>
         </Provider>
     );
