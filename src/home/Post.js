@@ -6,8 +6,10 @@ import ChatIcon from "@material-ui/icons/Chat";
 import {db} from "../firebase";
 import {useSelector} from "react-redux";
 import {Link} from "@reach/router";
+import {useEffect, useState} from "react";
 
 const Post = (props) => {
+    const [commentCount, setCommentCount] = useState(0);
 
     const loggedUser = useSelector(state => state.user)
     const deletePost = async (id) => {
@@ -56,6 +58,18 @@ const Post = (props) => {
         return [date, month, year].join(" ") + " at " + timeStamp.join(":") + meridian
     }
 
+    const getCommentCount = (postID) => {
+        if (!postID) return;
+        db.collection(`posts/${postID}/comments`).get().then(snapshot => {
+            if (snapshot.empty) setCommentCount(0);
+            setCommentCount(snapshot.docs.length)
+        });
+    }
+
+    useEffect(() => {
+        getCommentCount(props.post.id);
+    }, [])
+
     return (
         <Container className="post-container" key={props.post.id}>
             <Row>
@@ -100,7 +114,7 @@ const Post = (props) => {
                              onClick={() => handleLike(props.post)}><ThumbUpIcon/> Like {props.post.like && props.post.like.count}
                 </Button></Col>
                 <Col><Button variant="outline-secondary" size={"sm"}
-                             style={{'width': '100%'}}><ChatIcon/> Comment</Button></Col>
+                             style={{'width': '100%'}}><ChatIcon/> Comment {commentCount} </Button></Col>
             </Row>
             <hr className="hr"/>
         </Container>

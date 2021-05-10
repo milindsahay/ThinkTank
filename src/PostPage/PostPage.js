@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 
 const Comment = (props) => {
     const user = useSelector(state => state.user)
+    let unsubscribe = null
     const [comment, setComment] = useState("")
     const [allComments, setAllComments] = useState([]);
     const addComment = async () => {
@@ -15,7 +16,7 @@ const Comment = (props) => {
     }
 
     const getComments = async () => {
-        const unsubscribe = await db.collection(`posts/${props.post.id}/comments`).onSnapshot(snapshot => {
+        unsubscribe = await db.collection(`posts/${props.post.id}/comments`).onSnapshot(snapshot => {
             const comments = snapshot.docs.map(doc => {
                 return {
                     id: doc.id,
@@ -24,13 +25,15 @@ const Comment = (props) => {
             })
             setAllComments(comments);
         })
-        return unsubscribe;
     }
 
-    useEffect(()=>{
-       const unsubscribe = getComments()
-        return () => {unsubscribe.then(response => response())};
-    },[])
+    useEffect(() => {
+        getComments()
+        return () => {
+            console.log("unsubscribing to comments")
+            unsubscribe()
+        };
+    }, [])
     return (
         <>
             <Form>
@@ -58,17 +61,18 @@ const Comment = (props) => {
 }
 const PostPage = (props) => {
     const [post, setPost] = useState();
+    let unsubscribe = null
     const getPostFromDB = async () => {
-        const unsubscribe = await db.doc(`posts/${props.postid}`).onSnapshot((snapshot => {
+        unsubscribe = await db.doc(`posts/${props.postid}`).onSnapshot((snapshot => {
             console.log("Subscribed to post page.....")
             setPost({id: snapshot.id, ...snapshot.data()});
         }))
-        return unsubscribe;
     }
     useEffect(() => {
-        const unsubscribe = getPostFromDB();
+        getPostFromDB();
         return () => {
-            unsubscribe.then(response => response())
+            console.log("Unsubscribed to post page.....")
+            unsubscribe()
         }
     }, [])
     return (
