@@ -5,6 +5,7 @@ import Navigationbar from "../Navigationbar";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 
+// Separate comment and create user page instead
 const Comment = (props) => {
     const user = useSelector(state => state.user)
     let unsubscribe = null
