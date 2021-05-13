@@ -24,6 +24,28 @@ body{
     align-items: center;
 }
 .nav-img{
-    width: 50%;
+    height: 40px;
+    margin-right: 1.5rem;
     border-radius: 50%;
+}
+
+.usr-img{
+    width: 70%;
+}
+
+.post-container{
+    margin-top: 2rem;
+    border-radius: 25px;
+    padding-top: 8px;
+    border: #777777 solid 1px;
+}
+
+.post-img{
+    height: 60px;
+    border-radius: 50%;
+}
+
+.hr{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
