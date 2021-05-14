@@ -7,6 +7,7 @@ import {db} from "../firebase";
 import {useSelector} from "react-redux";
 import {Link} from "@reach/router";
 import {useEffect, useState} from "react";
+import Comments from "./Comments";
 
 const Post = (props) => {
     const [commentCount, setCommentCount] = useState(0);
@@ -117,6 +118,8 @@ const Post = (props) => {
                              style={{'width': '100%'}}><ChatIcon/> Comment {commentCount} </Button></Col>
             </Row>
             <hr className="hr"/>
+
+            <Comments post={props.post} />
         </Container>
     )
 }
