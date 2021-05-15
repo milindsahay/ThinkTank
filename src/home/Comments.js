@@ -1,16 +1,21 @@
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {db} from "../firebase";
-import {Button, Col, Form, Row} from "react-bootstrap";
+import {Col, Form, Row} from "react-bootstrap";
 
 const Comments = (props) => {
     const user = useSelector(state => state.user)
     let unsubscribe = null
     const [comment, setComment] = useState("")
     const [allComments, setAllComments] = useState([]);
-    const addComment = async () => {
-        const ref = await db.doc(`posts/${props.post.id}`).collection("comments").add({content: comment, user: user})
-        console.log(`Comment written with ref ${ref.id}`);
+    const addComment = async (event) => {
+        if (event.key === "Enter")
+        {
+            event.preventDefault();
+            const ref = await db.doc(`posts/${props.post.id}`).collection("comments").add({content: comment, user: user})
+            console.log(`Comment written with ref ${ref.id}`);
+        }
+
     }
 
     const getComments = async () => {
@@ -35,22 +40,47 @@ const Comments = (props) => {
     return (
         <>
             <Form>
-                <Row>
-                    <Col md={"auto"}><img src={user.photoURL} className="post-img"/></Col>
-                    <Col style={{'align-self': 'center'}}><Form.Control type="text" placeholder={`Comment`}
-                                                                        onChange={(event) => setComment(event.target.value)}/>
+                <Row style={{'margin-bottom': '0.5rem'}}>
+                    <Col md={"auto"}><img src={user.photoURL} className="post-img" style={{'height': '30px'}}/></Col>
+                    <Col style={{'align-self': 'center'}}>
+                        <Row>
+                            <Col>
+                            <Form.Control type="text" placeholder={`Comment`} style={{'height': '30px'}}
+                                                                              onChange={event => console.log("onchange" + event.target.value)} onKeyPress={(event)=>addComment(event)} />
+
+                            </Col>
+                        </Row>
                     </Col>
-                    <Col md={"auto"} style={{'align-self': 'center'}}><Button variant="primary"
-                                                                              onClick={addComment}>
-                        Comment
-                    </Button></Col>
                 </Row>
             </Form>
 
             {allComments.map(comment => (
+
                 <Row key={comment.id}>
-                    <Col md={"auto"}><img src={comment.user.photoURL} className="post-img"/></Col>
-                    <Col style={{'align-self': 'center'}}> {comment.content}
+                    <Col md="auto"><img src={comment.user.photoURL} className="post-img"
+                                        alt="picture" style={{
+                        'height': '30px',
+                        'margin-bottom': '3px'
+                    }}/></Col>
+                    <Col md={"auto"} style={{
+                        padding: '8px',
+                        'border-radius': '0.75rem',
+                        'background-color': '#ebf0ec',
+                        'margin': '0.5rem',
+                        'margin-top': '0',
+                        'padding-top': '0'
+                    }}>
+                        <Row> <Col md={"auto"} style={{
+                            margin: '0',
+                            'font-weight': 'bold',
+                            'font-size': '16px'
+                        }}>{comment.user && comment.user.displayName}</Col></Row>
+                        <Row><Col md={"auto"} style={{
+                            'line-height': '60%',
+                            'font-size': '14px',
+                            'display': 'flex',
+                            'align-items': 'center'
+                        }}>{comment.content}</Col></Row>
                     </Col>
                 </Row>
             ))}
