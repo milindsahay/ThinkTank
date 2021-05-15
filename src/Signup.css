@@ -37,7 +37,10 @@ body{
     margin-top: 2rem;
     border-radius: 25px;
     padding-top: 8px;
-    border: #777777 solid 1px;
+    background-color: #FFFFFF;
+    /*border: #777777 solid 1px;*/
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding-bottom: 8px;
 }
 
 .post-img{

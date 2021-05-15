@@ -46,7 +46,7 @@ const Comments = (props) => {
                         <Row>
                             <Col>
                             <Form.Control type="text" placeholder={`Comment`} style={{'height': '30px'}}
-                                                                              onChange={event => console.log("onchange" + event.target.value)} onKeyPress={(event)=>addComment(event)} />
+                                                                              onChange={event => setComment(event.target.value)} onKeyPress={(event)=>addComment(event)} />
 
                             </Col>
                         </Row>

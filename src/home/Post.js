@@ -11,6 +11,7 @@ import Comments from "./Comments";
 
 const Post = (props) => {
     const [commentCount, setCommentCount] = useState(0);
+    const [displayComment, setDisplayComment] = useState(false)
 
     const loggedUser = useSelector(state => state.user)
     const deletePost = async (id) => {
@@ -115,11 +116,13 @@ const Post = (props) => {
                              onClick={() => handleLike(props.post)}><ThumbUpIcon/> Like {props.post.like && props.post.like.count}
                 </Button></Col>
                 <Col><Button variant="outline-secondary" size={"sm"}
-                             style={{'width': '100%'}}><ChatIcon/> Comment {commentCount} </Button></Col>
+                             style={{'width': '100%'}}
+                             onClick={() => setDisplayComment(!displayComment)}><ChatIcon/> Comment {commentCount}
+                </Button></Col>
             </Row>
-            <hr className="hr"/>
+            <hr className="hr mb-4"/>
 
-            <Comments post={props.post} />
+            {displayComment && <Comments post={props.post}/>}
         </Container>
     )
 }
