@@ -22,7 +22,7 @@ const Navigationbar = () => {
             <Navbar bg="dark" variant="dark">
                 <Link to='/home'><Navbar.Brand>Think Tank</Navbar.Brand></Link>
                 <Nav className="ml-auto">
-                    <Link to='/user' ><Nav.Item><img src={user.photoURL} alt="profile picture" className="nav-img"/></Nav.Item></Link>
+                    <Link to={`/user/${user.uid}`} ><Nav.Item><img src={user.photoURL} alt="profile picture" className="nav-img"/></Nav.Item></Link>
                     <Nav.Item><Button variant="outline-info" className="ml-1 mr-1" onClick={signOut}>Sign Out</Button></Nav.Item>
                 </Nav>
             </Navbar>

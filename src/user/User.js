@@ -1,11 +1,26 @@
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import Navigationbar from "../Navigationbar";
-import {useState} from "react";
-import {db, storage} from "../firebase";
+import {useEffect, useState} from "react";
+import {db, getUser, storage} from "../firebase";
+import Post from "../home/Post";
 
-const User = () => {
-    const user = useSelector(state => state.user)
+const User = ({userid, isLogged}) => {
+    const loggedUser = useSelector(state => state.user)
+
+    const [user, setUser] = useState();
+    const getUserFromDb = async () => {
+        const userRef = getUser(userid)
+        const userData = (await userRef.get()).data()
+        setUser(userData)
+    }
+    useEffect(() => {
+        getUserFromDb()
+    },[])
+
+
+
+    const posts = useSelector(state => state.posts.filter(post => post.user.uid === userid))
     let imageInput = null;
     const [profileAttributes, setProfileAttributes] = useState({});
     const submitChanges = async (event) => {
@@ -36,7 +51,7 @@ const User = () => {
     return (
         <>
             <Navigationbar/>
-            <div>
+            {user && <div>
                 <Container className="my-container p-3">
                     <Row>
                         <Col xs={4}>
@@ -55,7 +70,7 @@ const User = () => {
                         </Col>
                     </Row>
                 </Container>
-            </div>
+            </div>}
 
             <Container className="my-container p-3">
                 <Form onSubmit={submitChanges}>
@@ -75,6 +90,13 @@ const User = () => {
                         </Button>
                     </Form.Group>
                 </Form>
+            </Container>
+            <Container className='my-container'>
+                {posts.map(function (post) {
+                    return (
+                        <Post post={post} key={post.id}/>
+                    )
+                })}
             </Container>
         </>
 

@@ -78,7 +78,7 @@ const Post = (props) => {
                 <Col md="auto"><img src={props.post.user && props.post.user.photoURL} className="post-img"
                                     alt="picture"/></Col>
                 <Col>
-                    <Row> <Link to={`/post/${props.post.id}`}><Col style={{
+                    <Row> <Link to={`/user/${props.post.user.uid}`}><Col style={{
                         'font-size': '25px',
                         padding: '0',
                         margin: '0',
